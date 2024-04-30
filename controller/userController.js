@@ -89,7 +89,7 @@ const login = async (req, res) => {
                 const currentDate = new Date().toLocaleDateString();
                 const currentTime = new Date().toLocaleTimeString('en-IN', timezone);
                 ipExists = await Ip.findOne({ ip_address: ipAddr, user_id: exists._id });
-                timesheetExists = await Timesheet.findOne({date:currentDate});
+                timesheetExists = await Timesheet.findOne({$and:[{date:currentDate}, {user_id:exists._id}]});
                 if(timesheetExists == null || timesheetExists == undefined){
                     if (ipExists) {
                         await Timesheet.create({ date: currentDate, user_id: exists._id, in_time: currentTime, out_time: currentTime, worked_hours: 0 });
@@ -147,13 +147,14 @@ const logout = async (req, res) => {
         globalUserId = res.locals.id;
         const authHeader = req.headers.authorization;
         if (authHeader) {
-            const exists = await Timesheet.findOne({ user_id: res.locals.id, date: new Date().toLocaleDateString() });
+            const exists = await Timesheet.findOne({ user_id: res.locals.id, date: new Date().toLocaleDateString()});
             if (exists) {
                 const currentTime = new Date().toLocaleTimeString('en-IN', { hour12: false, timeZone: 'Asia/Kolkata' });
                 await exists.updateOne({$set:{out_time:currentTime}});
             }
             res.status(200).json('User LoggedOut');
         }
+        await tsWorkedHrs(res.locals.id);
     } catch (error) {
         return res.status(500).json('Internal Server Error');
     }
@@ -207,7 +208,7 @@ async function tsWorkedHrs(ID) {
     }
 }
 
-setInterval(() => tsWorkedHrs(globalUserId), 1 * 60 * 1000);
+// setInterval(() => tsWorkedHrs(globalUserId), 1 * 60 * 1000);
 
 
 
