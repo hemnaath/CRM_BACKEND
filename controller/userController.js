@@ -183,8 +183,8 @@ const uploadDp = async(req, res)=>{
     }
 }
 
-async function tsWorkedHrs(ID) {
-    const exists = await Timesheet.findOne({ user_id: ID, date: new Date().toLocaleDateString() });
+async function tsWorkedHrs(id) {
+    const exists = await Timesheet.findOne({ user_id: id, date: new Date().toLocaleDateString() });
     if (exists) {
         const outTime = exists.out_time.split(':');
         const inTime = exists.in_time.split(':');

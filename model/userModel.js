@@ -10,7 +10,10 @@ const userSchema = new mongoose.Schema({
     filename:{type:String},
     filepath:{type:String},
     filetype:{type:String},
-    filesize:{type:String}
+    filesize:{type:String},
+    casual_leave:{type:Number},
+    sick_leave:{type:Number},
+    permission:{type:Number}
 },
 {
     timestamps:true
