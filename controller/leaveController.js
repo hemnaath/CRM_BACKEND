@@ -21,8 +21,6 @@ const applyLeave = async(req, res)=>{
                 if(key === leave_type){
                     if(finderObj[key] >=1){
                         const apply = await Leave.create({leave_type, applied_on, status:'pending', reason, emergency_contact, applied_by:res.locals.id});
-                        // finder[leave_type] -= 1;
-                        // await finder.save();
                         return res.status(200).json({message:'Leave applied', apply});
                     }else{
                         return res.status(400).json('No more' + ' ' + `${leave_type}`);
